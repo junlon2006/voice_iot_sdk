@@ -81,6 +81,5 @@ int unisound_app_start(hbm_command_cb cmd_callback) {
 }
 
 int iot_device_send_command_to_hbm(uint32_t cmd, char *payload, uint32_t payload_len) {
-  CommAttribute attr = {1};
-  return CommProtocolPacketAssembleAndSend(cmd, payload, payload_len, &attr);
+  return ChnlIotDevicePushCmd(cmd, payload, payload_len);
 }
