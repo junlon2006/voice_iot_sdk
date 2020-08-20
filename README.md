@@ -1,5 +1,5 @@
-# hb_m_hybird_sdk
-蜂鸟M 离在线混合模式跨平台移植方案SDK  
+# voice_iot_sdk
+离在线混合模式跨平台移植方案SDK  
 当前为Linux POSIX APIs版本  
 目录结构：  
 app   -->  应用层源码，main入口函数  
@@ -30,6 +30,6 @@ hal/src/porting.c
 关于配网相关的流程细节，后续再做说明  
 
 Linux x86环境demo编译与运行  
-step1、在工程根目录hb_m_hybird_sdk执行build.sh，进行编译  
-step2、编译完成后，将蜂鸟M和Linux pc将UART连接好，通过dmesg命令查找到设备名   
+step1、在工程根目录根目录执行build.sh，进行编译  
+step2、编译完成后，将语音板和Linux pc将UART连接好，通过dmesg命令查找到设备名   
 step3、执行可执行程序sudo build/app/src/APP /dev/ttyUSB0  
