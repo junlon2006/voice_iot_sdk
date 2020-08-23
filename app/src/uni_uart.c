@@ -130,6 +130,7 @@ static void *_protocol_stack_parse_task(void *args) {
     len = RingBufferGetDataSize(ringbuf);
     if (len == 0) {
       usleep(1000 * 2);
+      continue;
     }
 
     len = len > sizeof(buf) ? sizeof(buf) : len;
