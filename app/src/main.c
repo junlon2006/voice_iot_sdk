@@ -26,7 +26,46 @@
 #include "uni_log.h"
 #include "stdio.h"
 
+#include <unistd.h>
+#include <fcntl.h>
+
 #define TAG "main"
+
+/* 调用播报API使用方式demo */
+static void _response_broadcast_demo(const char *file_name) {
+  static char raw_pcm[512]; //静态内存，不占用栈上空间；也可以换成malloc堆上空间
+  int fd, len;
+
+  /* step1: 打开pcm文件句柄 */
+  fd = open(file_name, O_RDWR | O_CREAT | O_APPEND | O_SYNC, 0664);
+  if (fd <= 0) {
+    LOGE(TAG, "open file failed.");
+    return;
+  }
+
+  /* step2: 从文件中读出数据，流式传输给蜂鸟M进行播放，以此来减少内存开销 */
+  while (1) {
+    len = read(fd, raw_pcm, sizeof(raw_pcm));
+    if (len > 0) {
+      //读出的长度小于4K，说明文件已经读取完毕，不足4K的部分置零（追加静音）
+      if (len != sizeof(raw_pcm)) {
+        memset(raw_pcm + len, 0, sizeof(raw_pcm) - len);
+      }
+
+      //流式调用播放接口，len必须是512的整数倍，详情参照头文件注释
+      ChnlIotDeviceFeedAudioData(raw_pcm, len);
+    }
+
+    //文件读取完毕，退出
+    if (len < sizeof(raw_pcm)) {
+      LOGT(TAG, "end of file. [%s]", file_name);
+      break;
+    }
+  }
+
+  /* step3: 关闭文件句柄 */
+  close(fd);
+}
 
 #define MAX_PAYLOAD_LEN (16)
 static void _hbm_command_callback(char *payload, uint32_t len) {
@@ -34,14 +73,27 @@ static void _hbm_command_callback(char *payload, uint32_t len) {
   char tmp[MAX_PAYLOAD_LEN] = {0};
   strncpy(tmp, payload, ((len < MAX_PAYLOAD_LEN) ? len : (MAX_PAYLOAD_LEN - 1)));
   LOGT(TAG, "param=%s", tmp);
-  ChnlIotDevicePushCmd(CHNL_MSG_IOT_HBM_ACTION_PLAY, payload, len);
+
+  /* 根据离线识别结果，进行播报应答 */
+  if (0 == strcmp(tmp, "wakeup_uni")) {
+    _response_broadcast_demo("wozai.pcm");
+  } else if (0 == strcmp(tmp, "exitUni")) {
+    _response_broadcast_demo("youxuyaozaijiaowo.pcm");
+  } else if (0 == strcmp(tmp, "ac_power_on")) {
+    _response_broadcast_demo("yiweinidakaifengshan.pcm");
+  } else {
+    _response_broadcast_demo("ceshidefault.pcm");
+  }
 }
 
+/* 离线识别结果回调函数 */
 static void _hbm_command_cb(uint32_t cmd, char *payload, uint32_t len) {
   switch (cmd) {
     case CHNL_MSG_HBM_IOT_ASR_RESULT:
-    _hbm_command_callback(payload, len);
-    break;
+      _hbm_command_callback(payload, len);
+      break;
+    default:
+      break;
   }
 }
 

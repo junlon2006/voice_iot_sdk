@@ -63,13 +63,6 @@ int ChnlIotDeviceNetConfigureStatus(ChnIoTNetConfigureStatus *status);
 int ChnlIotDeviceRasrResult(ChnIoTRasrResult *result);
 
 /**
- * @brief IoT设备向蜂鸟M设置参数，可扩展
- * @param param
- * @return 0 成功，-1 失败
- */
-int ChnlIotDeviceSetParam(ChnIoTSetParam *param);
-
-/**
  * @brief IoT设备向蜂鸟M发送控制命令
  * @param cmd 控制命令
  * @param payload 控制命令参数列表
@@ -77,6 +70,15 @@ int ChnlIotDeviceSetParam(ChnIoTSetParam *param);
  * @return 0 成功，-1 失败
  */
 int ChnlIotDevicePushCmd(unsigned int cmd, char *payload, unsigned int payload_len);
+
+/**
+ * @brief IoT设备向蜂鸟M发送音频播报raw PCM数据
+ * @param pcm pcm数据buffer首指针
+ * @param len pcm数据长度字节数 [注意：len必须是512的倍数，除了最后一次可以不是512倍数]
+ * Tips: 流式推送，务必满足len的条件，比如音频1026字节数据，推送长度可以是[512，512，2]
+ * 如果不采用流式推送，也可以一次推送完，比如音频200K字节，可以一次推送完，len = 200K
+ */
+int ChnlIotDeviceFeedAudioData(char *pcm, int len);
 
 #ifdef __cplusplus
 }
