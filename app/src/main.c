@@ -47,7 +47,7 @@ static void _response_broadcast_demo(const char *file_name) {
   while (1) {
     len = read(fd, raw_pcm, sizeof(raw_pcm));
     if (len > 0) {
-      //读出的长度小于4K，说明文件已经读取完毕，不足4K的部分置零（追加静音）
+      //读出的长度小于512，说明文件已经读取完毕，不足512的部分置零（追加静音）
       if (len != sizeof(raw_pcm)) {
         memset(raw_pcm + len, 0, sizeof(raw_pcm) - len);
       }
