@@ -29,8 +29,6 @@
 #include <stdarg.h>
 
 #define LOG_BUFFER_LEN       (1024 * 2)
-#define uni_min(x,y)         (x > y ? y : x)
-#define uni_max(x,y)         (x > y ? x : y)
 
 static LogConfig   g_log_config = {1, 1, 1, 1, N_LOG_ALL};
 static uni_mutex_t g_mutex = {0};

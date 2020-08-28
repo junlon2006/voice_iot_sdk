@@ -49,6 +49,10 @@ enum {
   CHNL_MSG_IOT_HBM_PLAY_BUZZER,
   CHNL_MSG_IOT_HBM_REBOOT,
 
+  CHNL_MSG_IOT_HBM_AUDIO_SOURCE_BUF_REMAIN_LEN,
+  CHNL_MSG_IOT_HBM_AUDIO_SOURCE_BUF_REMAIN_LEN_ACK,
+  CHNL_MSG_IOT_HBM_AUDIO_SOURCE,
+
   CHNL_MSG_HBM_IOT_DEVICE_BASE = 1000, //1001开始的所有msg为IoT端需要感知处理的消息
   CHNL_MSG_HBM_IOT_ASR_RESULT,
   CHNL_MSG_IOT_NET_CONFIGURE,
@@ -78,9 +82,6 @@ typedef struct {
 } UNI_PACKED ChnIoTRasrResult;
 
 typedef struct {
-} UNI_PACKED ChnIoTSetParam;
-
-typedef struct {
   unsigned int sequence;
   unsigned int net_connected;
   char         version[28];
@@ -93,6 +94,10 @@ typedef struct {
 typedef struct {
   ChIoTInitParam init;
 } UNI_PACKED ChnIoTChallengePackParam;
+
+typedef struct {
+  unsigned int remain_bytes;
+} UNI_PACKED ChnIoTAudioLenAck;
 
 #ifdef __cplusplus
 }

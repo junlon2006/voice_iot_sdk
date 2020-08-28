@@ -33,13 +33,17 @@ extern "C" {
 #include <assert.h>
 #include <unistd.h>
 #include <stdint.h>
+#include <stdbool.h>
 
-#define IOT_DEVICE_VERSION  "v4.0.0"
+#define IOT_DEVICE_VERSION  "v4.1.0"
 
 #define UNI_WAIT_FOREVER   (-1)
 #define NULL_PTR_CHECK(p)  (NULL == p)
 #define MZERO(p)            memset(p, 0, sizeof(*p))
 #define OUT_MEM_STRING     "alloc memory failed"
+
+#define uni_max(x, y)      ((x) > (y) ? (x) : (y))
+#define uni_min(x, y)      ((x) < (y) ? (x) : (y))
 
 typedef struct {
     void *hdl;

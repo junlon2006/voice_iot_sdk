@@ -5,4 +5,4 @@ add_library(CHANNEL SHARED
 target_include_directories(CHANNEL PUBLIC
 	"../inc")
 
-target_link_libraries(CHANNEL HAL LOG EVENT_LOOP LIST)
+target_link_libraries(CHANNEL HAL LOG EVENT_LOOP LIST RINGBUF)
